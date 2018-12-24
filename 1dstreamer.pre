@@ -1,46 +1,31 @@
 $import absorbingBox
-$NX=52
-$NY=60
-$NZ=0
-$LX=0.0052
-$LY=0.006
-$LZ=0.004
+$NX=127
+$LX=0.00508
 $XSTART=0.
-$YSTART=-LY/2.
-$ZSTART=-LZ/2.
 $XEND=XSTART+LX
-$YEND=YSTART+LY
-$ZEND=ZSTART+LZ
 $NX1=NX+1
-$NY1=NY+1
-$NZ1=NZ+1
 $NXM=NX-1
-$NYM=NY-1
-$NZM=NZ-1
-$VOLTAGE=40000.
+$VOLTAGE=50400.
 $ELEC_MASS = 9.109e-31
 $FUNDCHARGE = 1.6022e-19
 $ELEC_CHARGE = -1.*FUNDCHARGE
 $ATOM_MASS_UNIT=1.667e-27
 $MASSN2=ATOM_MASS_UNIT*28.013
-$DT=1.e-13
+$DT=1e-13
 $GASDENSITY=2.6e25
 $MATERIAL='stainless'
 $DMFRAC=0.4
 
-
-#downShiftDir=-1
 dimension = 1
 floattype = double
 
 
-
-<GridBoundary anode>
+<GridBoundary rightanode>
   kind = funcGridBndry
   dmFrac = 0.4
   <STFunc function>
     kind=expression
-    expression=H(0.0051-x)-0.4
+    expression=H(0.005-x)-0.4
   </STFunc>
 </GridBoundary>
 
@@ -68,7 +53,7 @@ nsteps =5000
     kind = gmres
     precond=multigrid
     smoother = GaussSeidel
-    nLevels = 5
+    nLevels = 6
     tolerance = 1e-8
     maxIter = 50
     output = last
@@ -114,10 +99,10 @@ nsteps =5000
     <PositionGenerator gridSlab>
       kind = gridPosGen
       <Slab loadSlab>
-        lowerBounds = [0.0001]
-        upperBounds = [0.0002]
+        lowerBounds = [0.00004]
+        upperBounds = [0.00008]
       </Slab>
-      macroPerDir=[4 1 2]
+      macroPerDir=[100 1 2]
     </PositionGenerator>
   
     <VelocityGenerator emitVelGen>
@@ -165,7 +150,7 @@ nsteps =5000
 
 <ParticleSink diodeabsorber>
   kind = absSavCutCell
-  gridBoundary = anode
+  gridBoundary = rightanode
   lowerBounds = [-1]
   upperBounds = [NX1]
 </ParticleSink>
@@ -198,7 +183,7 @@ nsteps =5000
 
 <ParticleSink dioden2absorber>
   kind = absorber
-  gridBoundary = anode
+  gridBoundary = rightanode
   lowerBounds = [ -1 ]
   upperBounds = [NX1 ]
 </ParticleSink>
@@ -290,7 +275,7 @@ nsteps =5000
   kind = nullSelfCombination
   species = N2ion
   weight_max =4.e13
-  threshold = 50 
+  threshold =50
   algorithm_kind = 3
  </NullInteraction>
 </MonteCarloInteractions>
